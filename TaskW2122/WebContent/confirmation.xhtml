@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- confirmation.xhtml is the view of the confirmation page -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3c.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:ui="http://java.sun.com/jsf/facelets">
+	<h:head>
+		<title>Cart</title>
+		<h:outputStylesheet library="/css" name="style.css" />
+	</h:head>
+		<h:body>
+			<!-- Form to navigate from confirmation page -->
+			<h:form>
+				<h:message />
+				<h:panelGrid columns="3">
+					<h:commandLink action="#{loginController.loggedinStatus()}" value="#{loginController.loginOrLogout()}"/>
+					<h:commandLink action="shop?faces-redirect=true" value="Return To Shop"/>
+					<h:commandLink action="#{orderController.cancel}" value="Cancel"/>
+				</h:panelGrid>
+			</h:form>
+			<h3>
+				Your order number is <h:outputText value="#{sessionBean.orderNumber}"/>
+			</h3>
+			<!-- Table to display the content of the cart -->
+			<h:dataTable value="#{sessionBean.order}" var="item" 
+			binding="#{cartController.itemDataTable}"
+			styleClass="itemTable"
+			headerClass="itemTableHeader"
+			rowClasses="itemTableOddRow,itemTableEvenRow">
+				<h:column>
+					<f:facet name="header">Item Number</f:facet>
+					<h:outputText value="#{item.item.itemNumber}"/>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Item</f:facet>
+					<h:outputText value="#{item.item.shortDesc}"/>
+				</h:column>
+				<h:column>
+		 			<f:facet name="header">Description</f:facet>
+					<h:outputText value="#{item.item.longDesc}"/>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Qty</f:facet>
+					<h:outputText value="#{item.quantity}"/>
+				</h:column>
+			</h:dataTable>
+			<!-- Form to add order desc to the order and save that and the cart to DB  -->
+			<h:form>
+				<h:messages styleClass="messages" />
+				<h:panelGrid columns="1">
+					<h:outputText value="Order Comment (max 200 characters):"/>
+					<h:inputTextarea label="Order Comment" value="#{sessionBean.orderDesc}">
+						<f:validateLength minimum="0" maximum="200"/>
+					</h:inputTextarea>
+					<h:panelGroup/>
+				</h:panelGrid>
+					<h:commandLink value="Place Order"
+					binding="#{messages.messageButton}" 
+					action="#{orderController.placeOrder}"/>
+			</h:form>
+		</h:body>
+	</html>

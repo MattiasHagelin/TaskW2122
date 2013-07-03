@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- shop.xhtml is the view of the shop page -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3c.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:ui="http://java.sun.com/jsf/facelets">
+	<h:head>
+		<title>Web Shop</title>
+		<h:outputStylesheet library="/css" name="style.css" />
+	</h:head>
+	<h:body>
+		<!-- Form to navigate from the shop page -->
+		<h:form>
+			<h:message />
+			<h:panelGrid columns="2">
+				<h:commandLink action="#{loginController.loggedinStatus()}" value="#{loginController.loginOrLogout()}"/>
+				<h:commandLink action="cart?faces-redirect=true" value="Check Cart"/>
+			</h:panelGrid>
+		</h:form>
+		<h3>
+			Welcome <h:outputText value="#{sessionBean.customer.firstName}"/>!
+		</h3>
+		<!-- Shows how many items there currently is in the cart -->
+		<h:outputText value="#{cartController.cartStatus()}"/>
+		<!-- Form to see the content of itemBean items list and add items to the cart  -->
+		<h:form>
+			<h:messages styleClass="messages"/>
+			<h:dataTable value="#{itemBean.items}" var="item" 
+			binding="#{cartController.itemDataTable}"
+			styleClass="itemTable"
+			headerClass="itemTableHeader"
+			rowClasses="itemTableOddRow,itemTableEvenRow">
+				<h:column>
+					<f:facet name="header">Item Number</f:facet>
+					<h:outputText value="#{item.item.itemNumber}"/>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Item</f:facet>
+					<h:outputText value="#{item.item.shortDesc}"/>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Description</f:facet>
+					<h:outputText value="#{item.item.longDesc}"/>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Quantity</f:facet>
+					<h:inputText size="2"  value="#{item.quantity}" autocomplete="off"/>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Buy</f:facet>
+					<h:commandLink value="Add To Cart" 
+					binding="#{messages.messageButton}" 
+					actionListener="#{cartController.addToCart()}"/>
+				</h:column>
+			</h:dataTable>
+		</h:form>
+	</h:body>
+</html>
